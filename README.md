@@ -1,14 +1,10 @@
 # Sherlock Contest Preparations
 
-
-## Scope
-https://jetstreamgg.notion.site/Maker-Endgame-Launch-Sherlock-Audit-Contest-Scope-641baee4028548ccbb3783f2278c3215
-
 ## Known Issues:
 
 Note that disclaimers here can override other details or disclaimers in the Readmes or source code.
 
-- Known issues that have been discussed publicly (e.g. in pull requests) are out of scope.
+- Known issues that have been discussed publicly (e.g. in pull requests) at any point before the contest start date are out of scope.
 - Issues/comments from the Readmes should be taken into account.
 - All previous audits content should be taken into account for known issues.
 
@@ -30,12 +26,12 @@ With this clarification
 - Any loss smaller than 0.5% can never be Medium
 - Any loss between 0.5% and 5% loss can be Medium at most
 - Any issue larger than 5% can be Medium or High (depending on constraints)
-- If a single attack can cause a 0.01% loss but can be replayed indefinitely (assuming little to no costs), it will be perceived as a 100% loss. Note that in most modules governance can step in within hours (aka Mom contracts), or otherwise if needed  plus the governance pause delay to halt the system. This should be taken into account when determining if replaying indefinitely is possible.
+- If a single attack can cause a 0.01% loss but can be replayed indefinitely (assuming little to no costs), it will be perceived as a 100% loss. Note that in most modules governance can step in within hours (aka Mom contracts), or otherwise if needed  plus the governance pause delay to halt the system. This should be taken into account when determining if replaying indefinitely is possible. For the contest we assume 2 hours from the point an exploit starts until a delay-bypass Mom contract executes and 50 hours for a fix that requires governance delay (including the delay).
 
-For protocol losses, it must be demonstrated that the losses exceed the above percentage assuming protocol reserves of 100m+ (rough estimation of POL = SB + SBE).
+For protocol losses, it must be demonstrated that the losses exceed the above percentage assuming protocol reserves of 100m+.
 For user losses, it must demonstrate those losses with the user's 10k+ of value locked/vulnerable as part of the attack.
 
-In the lockstake case, the maximal locked MKR is assumed at $250M and the maximal line is assumed as 100m.
+In the lockstake case, the maximal locked MKR is assumed at $250m and the maximal line is assumed as 100m dai.
 A user in the lockstake case is a single urn.
 
 For the SNST case, the maximal locked NST amount is assumed as 1B DAI.
@@ -63,15 +59,15 @@ The protocol chooses to override at least the following from https://docs.sherlo
 **Any user mistakes resulting in their own funds being lost is out of scope.**
 
 ## General Disclaimers
-- Only regular tokens that are examined by Maker should be incorporated in the system. For example, they are assumed to:
-    - revert on failure
-    - be non-reentrant
-    - not support hooks
-    - have standard decimals
-    - not implement fee on transfer
-    - not have rebase logic.
-- Note that the lack of any weird feature from the above list of token features does not mean it is supported, these are just examples.
-- ERC-20 tokens - issues stemming from upgradability of these tokens (e.g USDC) are out of scope.
+- The token contracts used in each repository are known in advance and there is no use of arbitrary tokens in any of the contest modules:
+   - In the nst module, apart from the NST token itself only DAI is used (in the DaiNst converter).
+   - In the ngt module, apart from the NGT token itself, only MKR is used (in the MkrNgt converter).
+   - In the snst module, apart from the SNST token, only NST is used (as the deposit token).
+   - In the vote-delegate module only MKR and the existing Chief's IOU tokens are used.
+   - In endgame-toolkit the farm types to be used through different deployment phases are (using rewards/stake notation): NGT/NST, SDAO/NST, NGT/SDAO, NST/LSMKR and SDAO/LSMKR (the last two types are only for lockstake).
+   - In the lockstake module only MKR, NGT, NST and LSMKR are used (plus the two farms types mentioned above).
+- Issues stemming from potential different future implementations of NST and SNST (due to their upgradeability) are out of scope.
+- All the above means that there is no need to analyze potential use/integration of any other token code (which could potentially have weird behaviour) in any of the modules.
 - Inaccurate specifications are out of scope if they do not lead to direct loss of funds.
 - Lack of documentation is out of scope.
 - Gas inefficiencies are out of scope.
@@ -84,25 +80,24 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Discrepancies in handling of zero/non-actionable input amounts (no-op, revert, etc..) are out of scope.
 - Issues in other Makerdao repositories are out of scope, even in case they are relevant to interactions with the contracts in scope. For example - dss, the Chief contract.
 - As the initiation of the endgame components is not considered time-critical, any permissionless action that can cause the spells to revert is not considered a medium or high severity issue (as another spell can be crafted). It can be assumed that no other mission-critical tasks are included in the same spell.
-- Issues where there is damage to the protocol but attack cost exceeds damage caused/funds stolen significantly are considered low severity.
-- Some third parties are trusted - Uniswap, Circle (USDC).
+- Issues where there is damage to the protocol/users but the net attack cost exceeds the damage caused significantly (50%+ more) are considered low severity.
+- Third parties are trusted (for example Uniswap).
 - Potential user errors are out of scope.
 - Tests and mock contracts are excluded.
 - Deployment trust model - deployed contracts are assumed to be checked as part of Maker's spellcrafting process. Deployment of the contracts is assumed to be done with special care taken that all contracts have been deployed correctly. It is assumed that the initcode, bytecode, traces and storage (e.g. mappings) are checked for unintended entries, calls or similar. This is especially crucial for any value stored in a mapping array or similar (e.g. could break access control, could lead to stealing of funds). Additionally, it is checked that no allowance is given to unexpected addresses.
-- Minor rounding errors leading to missing some fees, getting more fee share compared to someone else, or fees locked in the protocol are considered low severity at best.
-- DoS issues where no funds would be locked or protocol functionality is blocked but one one can still withdraw should be considered low severity at best.
-- Oracles are trusted to provide non-stale and correct information.
+- Minor rounding errors leading to missing some fees, getting more fee share compared to someone else, or fees locked in the protocol are considered low severity at best. For definition of "minor" we use 0.5% (assuming minimal amounts as in the severity definitions).
+- Oracles are trusted to provide non-stale and correct information. Circuit breakers (min amount, max amount) issues are not considered relevant.
 - NGT market price is assumed to reflect MKR market price (and vice-versa) scaled by the conversion factor.
 - Aggregation of dust amounts in contracts is disregarded.
 - The ability to increase `line` / `Line` right away by an additional `gap` amount when setting the autoline is known.
 - `uint32` is assumed enough for storing timestamps.
-- `uint96` is generally assumed suitable for storing token amounts.
 - `spotter.par()` is assumed to stay as `RAY`.
 - Handling of token donations to the protocol is not guranteed in any module. A lack of such handling is not considered an issue.
 - Some of the modules have backward compatability getters like `dai()`, `daiJoin()`, etc.. The lack of such in other modules should not be treated as an issue.
 - Oracle value updates outside of the delta governance considered when choosing the parameters of the system are out of scope.
 This includes trivial issues in the main stable coin system, roughly speaking e.g. when an extreme price drop exceeds the collateral's liquidation ratio, so that a position would become unhealthy after the update and a liquidation wouldn’t raise sufficient funds leading to bad debt.  Constructions describing how “loss of funds” (bad debt) could occur in such a scenarios are out of scope.
 - Issues present in the current Maker protocol deployment which are disclosed to the Maker team privately or publicly through the ImmuneFi bug bounty program during the Sherlock public audit contest window cannot be used in the execution pathways when reporting issues for the new codebases in the Sherlock public audit contest
+- Any user mistake resulting in their own funds being lost is out of scope.
 
 ## Governance Related:
 - Governance configurations are assumed to be set with extreme care. Lack of sanity check issues are not viable submissions.
@@ -110,15 +105,21 @@ This includes trivial issues in the main stable coin system, roughly speaking e.
 - To be extra clear about governance being trusted, it is assumed that `wards` in all contracts are fully trusted, as well as other priveleged roles.
 - Even when possible, governance is assumed to not confiscate/manipulate specific user funds/positions without a good reason. This means that reports that claim that governance can take specific users funds are not considered issues.
 - Subdao proxies, facilitators and permissioned keepers are assumed fully trusted.
-- Emergency shutdown is assumed to not happen.
+- Emergency or planned shutdown is assumed to not happen.
 - There is assumed to be governance delay of at least 16 hours.
 - Gathering enough MKR for governance actions is assumed to be possible within a few hours.
 - The option of avoiding future governance actions towards NST and SNST holders by moving to vat.dai is known.
 - Grouping of specific governance actions if needed (or permissionless actions with governance ones), are assumed to be implemented in the spell or dss-exec-lib level.
 - Chainlog maintenance is assumed to be possible also after components have been added or removed. Therefore missing/extra/wrong/inconsistent Chainlog values are assumed a non-issue.
 - Certain models have Mom contracts to allow governance to pefrom actions without gov delay. Choosing which contracts or actions should have this ability is assumed to be done by the protocol and pointing out a lack of it for a certain module is out of scope.
-- Any user mistake resulting in their own funds being lost is out of scope.
 
+## DOS attacks:
+We consider DoS attacks in the same manner as detailed in https://docs.sherlock.xyz/audits/judging/judging. However, other comments in the Readmes (including this one) take precedence over it (for example, if there is no loss of funds it is not considered an issue).
+Also, see these specific comments:
+- DoS issues where no funds would be locked or protocol functionality is blocked but one can still withdraw should be considered low severity at most.
+- A DoS attack in case of lockstake can never be high severity if governance can solve it later with a migrator contract and/or with issuing MKR/NGT.
+- A DoS attack that temporarily locks funds of an already liquidated position for up to 1 week is a non-issue, 1 week to 4 weeks could be a medium severity issue at most (while weighing the attack nature and other circumstances).
+- It is assumed that users and keepers are aware of the reserveHatch functionality for solving vote-delegate/lockstake related DoS issues. It is assumed that keepers run by 3rd-parties and Maker integrate it to their logic and that the need for using it is constantly monitored. It is also assumed that in case it is needed the Maker community/project would set up a keeper to call reserveHatch periodically (within less than a day).
 
 ## Specific Repos Known Issues and Disclaimers:
 
@@ -147,7 +148,7 @@ We are mimicking the old proxy actions behaviour, where we drip for drawing, as 
 * On certain market conditions such as extreme price movements some of the exit fee may not be burned on liquidations. This is a known attribute of the system.
 * As getting liquidated is considered a state that should generally be avoided, it is expected that in such cases the urn owner becomes limited in various ways. For example, it cannot delegate or stake during liquidations and in some situations, it can take more time than the urn owner expects due to more liquidations or liquidations taking a lot of time. Other limitations may apply and are not considered an issue unless significant funds are lost permanently.
 * Using the "stopped" states in the lockstake clipper is assumed to be used by wards in an exterme emergency. It is a known risk that some of the system attributes and functionality may not hold afterwards, including risking user and system funds. This includes also LSE special functionality (allowing exit of auctions leftover, not burning fees, delegating, staking, etc..).
-* As the Maker protocol has the ability to mint MKR and NGT tokens and also to migrate the Lockstake engine, any situation of locked user MKR/NGT should not be regarded as a high severity issue.
+* As the Maker protocol has the ability to mint MKR and NGT tokens and also to migrate the Lockstake engine, any situation of locked user MKR/NGT should not be regarded as a high severity issue. It is assumed that a lockstake migrator/minter contract can be set up and go live within 5 days (including gov delay).
 * Using yank() in the lockstake clipper is assumed to only happen as part of a shutdown procedure. Since this is out of scope, it is assumed not to happen.
 * As with other collaterals, "tip" and "chip" are assumed to be chosen very carefuly, while taking into account the dust parameter and with having in mind incentive farming risks.
 
@@ -155,8 +156,10 @@ We are mimicking the old proxy actions behaviour, where we drip for drawing, as 
 * Inefficiencies due to configurations or oracle frequencies/pricing are out of scope.
 * Slow/Unavoidable delay of withdrawing/redeeming the protocol funds in case of an emergency is known.
 * Possible sandwich attacks and MEV extraction scenarios are known issues. Maker's risk unit is assumed to be setting parameters while having these in mind.
+* The dss-flappers (SBE) solution assumes losing several percentages of funds **by design** during the Uniswap interactions due to slippage, MEV, sudden market movements, sandwich attacks, oracles imprecision and update resolution, etc. Obvioulsy in this specific case the numbers mentioned in the severity definitions (e.g 0.5%) are irrelevant. ```
 * The fact that the SBE funds are not taken into account in protocol accounting or for flops auction triggering is known.
 * It is expected that governance sets parameters carefully during the module's life cycle, including maintaining splitter.hop as the same value as the farm's reward duration.
+* The combination of the governance configuration of vow.bump and splitter.hop is assumed to not allow spending more than 50K DAI per hour (in practice should be a much slower rate).
 
 ### endgame-toolkit
 * Any issue that exists in the original non-Maker [Syntetix staking rewards](https://github.com/Synthetixio/synthetix/blob/5e9096ac4aea6c4249828f1e8b95e3fb9be231f8/contracts/StakingRewards.sol) contract is out of scope.
