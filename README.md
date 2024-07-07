@@ -96,7 +96,6 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Some of the modules have backward compatability getters like `dai()`, `daiJoin()`, etc.. The lack of such in other modules should not be treated as an issue.
 - Oracle value updates outside of the delta governance considered when choosing the parameters of the system are out of scope.
 This includes trivial issues in the main stable coin system, roughly speaking e.g. when an extreme price drop exceeds the collateral's liquidation ratio, so that a position would become unhealthy after the update and a liquidation wouldn’t raise sufficient funds leading to bad debt.  Constructions describing how “loss of funds” (bad debt) could occur in such a scenarios are out of scope.
-- Issues present in the current Maker protocol deployment which are disclosed to the Maker team privately or publicly through the ImmuneFi bug bounty program during the Sherlock public audit contest window cannot be used in the execution pathways when reporting issues for the new codebases in the Sherlock public audit contest
 - Any user mistake resulting in their own funds being lost is out of scope.
 
 ## Governance Related:
