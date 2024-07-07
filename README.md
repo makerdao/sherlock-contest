@@ -84,7 +84,7 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Discrepancies in handling of zero/non-actionable input amounts (no-op, revert, etc..) are out of scope.
 - Issues in other Makerdao repositories are out of scope, even in case they are relevant to interactions with the contracts in scope. For example - dss, the Chief contract.
 - As the initiation of the endgame components is not considered time-critical, any permissionless action that can cause the spells to revert is not considered a medium or high severity issue (as another spell can be crafted). It can be assumed that no other mission-critical tasks are included in the same spell.
-- Issues where there is damage to the protocol but attack cost exceeds damage caused/funds stolen significantly (50%+ more) are considered low severity.
+- Issues where there is damage to the protocol/users but the net attack cost exceeds the damage caused significantly (50%+ more) are considered low severity.
 - Some third parties are trusted - Uniswap, Circle (USDC).
 - Potential user errors are out of scope.
 - Tests and mock contracts are excluded.
@@ -161,7 +161,7 @@ We are mimicking the old proxy actions behaviour, where we drip for drawing, as 
 * Inefficiencies due to configurations or oracle frequencies/pricing are out of scope.
 * Slow/Unavoidable delay of withdrawing/redeeming the protocol funds in case of an emergency is known.
 * Possible sandwich attacks and MEV extraction scenarios are known issues. Maker's risk unit is assumed to be setting parameters while having these in mind.
-* The dss-flappers (SBE) solution assumes losing several percentages of funds **by design** during the Uniswap interactions due to slippage, MEV, sudden market movements, sandwich attacks, oracles imprecision and update resolution, etc. Obvioulsy in this specific case the numbers mentioned in the severity definitions (e.g 0.5%) are irrelevant. The history of the SBE can be taken as reference for more than acceptable trading losses. Note that overall the SBE is considered a success in comparison to the previous implemented flap auctions.
+* The dss-flappers (SBE) solution assumes losing several percentages of funds **by design** during the Uniswap interactions due to slippage, MEV, sudden market movements, sandwich attacks, oracles imprecision and update resolution, etc. Obvioulsy in this specific case the numbers mentioned in the severity definitions (e.g 0.5%) are irrelevant. ```
 * The fact that the SBE funds are not taken into account in protocol accounting or for flops auction triggering is known.
 * It is expected that governance sets parameters carefully during the module's life cycle, including maintaining splitter.hop as the same value as the farm's reward duration.
 * The combination of the governance configuration of vow.bump and splitter.hop is assumed to not allow spending more than 50K DAI per hour (in practice should be a much slower rate).
