@@ -85,7 +85,7 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Potential user errors are out of scope.
 - Tests and mock contracts are excluded.
 - Deployment trust model - deployed contracts are assumed to be checked as part of Maker's spellcrafting process. Deployment of the contracts is assumed to be done with special care taken that all contracts have been deployed correctly. It is assumed that the initcode, bytecode, traces and storage (e.g. mappings) are checked for unintended entries, calls or similar. This is especially crucial for any value stored in a mapping array or similar (e.g. could break access control, could lead to stealing of funds). Additionally, it is checked that no allowance is given to unexpected addresses.
-- Minor rounding errors leading to missing some fees, getting more fee share compared to someone else, or fees locked in the protocol are considered low severity at best. For definition of "minor" we use 0.5%.   
+- Minor rounding errors leading to missing some fees, getting more fee share compared to someone else, or fees locked in the protocol are considered low severity at best. For definition of "minor" we use 0.5% (assuming minimal amounts as in the severity definitions).
 - Oracles are trusted to provide non-stale and correct information. Circuit breakers (min amount, max amount) issues are not considered relevant.
 - NGT market price is assumed to reflect MKR market price (and vice-versa) scaled by the conversion factor.
 - Aggregation of dust amounts in contracts is disregarded.
