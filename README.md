@@ -1,9 +1,5 @@
 # Sherlock Contest Preparations
 
-
-## Scope
-https://jetstreamgg.notion.site/Maker-Endgame-Launch-Sherlock-Audit-Contest-Scope-641baee4028548ccbb3783f2278c3215
-
 ## Known Issues:
 
 Note that disclaimers here can override other details or disclaimers in the Readmes or source code.
