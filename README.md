@@ -30,7 +30,7 @@ With this clarification
 - Any loss smaller than 0.5% can never be Medium
 - Any loss between 0.5% and 5% loss can be Medium at most
 - Any issue larger than 5% can be Medium or High (depending on constraints)
-- If a single attack can cause a 0.01% loss but can be replayed indefinitely (assuming little to no costs), it will be perceived as a 100% loss. Note that in most modules governance can step in within hours (aka Mom contracts), or otherwise if needed  plus the governance pause delay to halt the system. This should be taken into account when determining if replaying indefinitely is possible. For the contest we assume 2 hours from the point an exploit starts until a delay-bypass Mom contract executes and 56 hours for a fix that requires governance delay (including the delay).
+- If a single attack can cause a 0.01% loss but can be replayed indefinitely (assuming little to no costs), it will be perceived as a 100% loss. Note that in most modules governance can step in within hours (aka Mom contracts), or otherwise if needed  plus the governance pause delay to halt the system. This should be taken into account when determining if replaying indefinitely is possible. For the contest we assume 2 hours from the point an exploit starts until a delay-bypass Mom contract executes and 50 hours for a fix that requires governance delay (including the delay).
 
 For protocol losses, it must be demonstrated that the losses exceed the above percentage assuming protocol reserves of 100m+.
 For user losses, it must demonstrate those losses with the user's 10k+ of value locked/vulnerable as part of the attack.
@@ -69,7 +69,7 @@ The protocol chooses to override at least the following from https://docs.sherlo
    - In the snst module, apart from the SNST token, only NST is used (as the deposit token).
    - In the vote-delegate module only MKR and the existing Chief's IOU tokens are used.
    - In endgame-toolkit the farm types to be used through different deployment phases are (using rewards/stake notation): NGT/NST, SDAO/NST, NGT/SDAO, NST/LSMKR and SDAO/LSMKR (the last two types are only for lockstake).
-   - In the lockstake module only MKR, NGT and LSMKR are used (plus the two farms types mentioned above).
+   - In the lockstake module only MKR, NGT, NST and LSMKR are used (plus the two farms types mentioned above).
 - Issues stemming from potential different future implementations of NST and SNST (due to their upgradeability) are out of scope.
 - All the above means that there is no need to analyze potential use/integration of any other token code (which could potentially have weird behaviour) in any of the modules.
 - Inaccurate specifications are out of scope if they do not lead to direct loss of funds.
@@ -85,17 +85,16 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Issues in other Makerdao repositories are out of scope, even in case they are relevant to interactions with the contracts in scope. For example - dss, the Chief contract.
 - As the initiation of the endgame components is not considered time-critical, any permissionless action that can cause the spells to revert is not considered a medium or high severity issue (as another spell can be crafted). It can be assumed that no other mission-critical tasks are included in the same spell.
 - Issues where there is damage to the protocol/users but the net attack cost exceeds the damage caused significantly (50%+ more) are considered low severity.
-- Some third parties are trusted - Uniswap, Circle (USDC).
+- Third parties are trusted (for example Uniswap).
 - Potential user errors are out of scope.
 - Tests and mock contracts are excluded.
 - Deployment trust model - deployed contracts are assumed to be checked as part of Maker's spellcrafting process. Deployment of the contracts is assumed to be done with special care taken that all contracts have been deployed correctly. It is assumed that the initcode, bytecode, traces and storage (e.g. mappings) are checked for unintended entries, calls or similar. This is especially crucial for any value stored in a mapping array or similar (e.g. could break access control, could lead to stealing of funds). Additionally, it is checked that no allowance is given to unexpected addresses.
 - Minor rounding errors leading to missing some fees, getting more fee share compared to someone else, or fees locked in the protocol are considered low severity at best. For definition of "minor" we use 0.5%.   
-- Oracles are trusted to provide non-stale and correct information. Circus breakers (min amount, max amount) issues are not considered relevant.
+- Oracles are trusted to provide non-stale and correct information. Circuit breakers (min amount, max amount) issues are not considered relevant.
 - NGT market price is assumed to reflect MKR market price (and vice-versa) scaled by the conversion factor.
 - Aggregation of dust amounts in contracts is disregarded.
 - The ability to increase `line` / `Line` right away by an additional `gap` amount when setting the autoline is known.
 - `uint32` is assumed enough for storing timestamps.
-- `uint96` is generally assumed suitable for storing token amounts.
 - `spotter.par()` is assumed to stay as `RAY`.
 - Handling of token donations to the protocol is not guranteed in any module. A lack of such handling is not considered an issue.
 - Some of the modules have backward compatability getters like `dai()`, `daiJoin()`, etc.. The lack of such in other modules should not be treated as an issue.
