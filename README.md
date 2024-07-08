@@ -95,7 +95,7 @@ The protocol chooses to override at least the following from https://docs.sherlo
 - Handling of token donations to the protocol is not guranteed in any module. A lack of such handling is not considered an issue.
 - Some of the modules have backward compatability getters like `dai()`, `daiJoin()`, etc.. The lack of such in other modules should not be treated as an issue.
 - Oracle value updates outside of the delta governance considered when choosing the parameters of the system are out of scope.
-This includes trivial issues in the main stable coin system, roughly speaking e.g. when an extreme price drop exceeds the collateral's liquidation ratio, so that a position would become unhealthy after the update and a liquidation wouldn’t raise sufficient funds leading to bad debt.  Constructions describing how “loss of funds” (bad debt) could occur in such a scenarios are out of scope.
+This includes trivial issues in the main stable coin system, roughly speaking e.g. when an extreme price drop exceeds the collateral's liquidation ratio, so that a position would become unhealthy after the update and a liquidation wouldn’t raise sufficient funds leading to bad debt.  Constructions describing how “loss of funds” (bad debt) could occur in such a scenarios are out of scope. For example, if a collateral has a liquidation ratio of 200%, but the asset price suffers a 60% price drop, leading to a bad debt, it is considered a design decision.
 - Any user mistake resulting in their own funds being lost is out of scope.
 
 ## Governance Related:
